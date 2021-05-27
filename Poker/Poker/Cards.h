@@ -16,7 +16,7 @@ struct Card {
 	Suit suit;
 	short int number;
 	Card() {
-		suit = Suit::Diamonds;
+		suit = Suit::Hearts;
 		number = 2;
 	}
 
@@ -30,10 +30,13 @@ struct Card {
 	}
 };
 
-static void PrintCards(vector<Card> cards) {
+static void PrintCards(vector<Card> cards, string preface) {
+	if (cards.empty()) {
+		return;
+	}
 	string result = "|  ";
 	for (Card c : cards) {
 		result += c.Name() + "  |  ";
 	}
-	cout << result;
+	cout << "\n" << preface << result << "\n\n";
 }

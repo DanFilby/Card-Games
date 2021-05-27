@@ -1,5 +1,6 @@
 #include"Cards.h"
 #include"CardDeck.h"
+#include"PokerHand.h"
 #include<iostream>
 #include<vector>
 using namespace std;
@@ -9,8 +10,11 @@ class PokerBoard
 {
 public:
 	PokerBoard(CardDeck&);
+	void ResetBoard();
 	void PrintBoard();
-	void AddHand(vector<Card>);
+	void PrintAllHands();
+	void AddHand(PokerHand&);
+	void Deal();
 	void Flop();	//first three cards
 	void Turn();	//fourth card
 	void River();	//fifth card
@@ -18,6 +22,6 @@ public:
 private:
 	CardDeck& boardDeck;
 	vector<Card> boardCards;
-	vector<vector<Card>> hands;
+	vector<PokerHand> hands;
 };
 
