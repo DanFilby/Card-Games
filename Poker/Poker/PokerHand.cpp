@@ -3,34 +3,32 @@
 
 PokerHand::PokerHand()
 {
-	cards = vector<Card>(&card1, &card2);
+	cards = vector<Card*>(2);
 }
 
-PokerHand::PokerHand(std::vector<Card> _cards)
+PokerHand::PokerHand(std::vector<Card*> _cards)
 {
 	cards = _cards;
 }
 
 PokerHand PokerHand::NewEmptyHand()
 {
-	vector<Card> cards = vector<Card>(2);
+	vector<Card*> cards = vector<Card*>(2);
 	PokerHand hand = PokerHand(cards);
 	return hand;
 }
 
-void PokerHand::AddCard(Card _card)
+void PokerHand::AddCard(Card* _card)
 {
-	//TODO: keeps deleting after leaving scope nvm doest actually work wtf
-	card2 =  _card;
-	cardSetterInt = (cardSetterInt++) % 2;
+	cards.push_back(_card);
 	PrintHand();
 }
 
 void PokerHand::Clear()
 {
-	for (Card c : cards)
+	for (Card* c : cards)
 	{
-		delete(&c);
+		delete(c);
 	}
 }
 
@@ -40,9 +38,9 @@ void PokerHand::PrintHand() {
 
 
 int PokerHand::TotalHandValue() {
-	int result = 0;
-	for (Card c : cards) {
-		result += c.number;
-	}
-	return result;
+	/*int result = 0;
+	for (Card* c : cards) {
+		result += c->number();
+	}*/
+	return 1;
 }

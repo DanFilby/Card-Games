@@ -7,7 +7,7 @@ class CardDeck
 public: 
 	CardDeck();
 	void ResetDeck();
-	Card DrawCard();
+	Card* DrawCard();
 	void Shuffle();
 	int Size();
 	void PrintCardsTopDown();

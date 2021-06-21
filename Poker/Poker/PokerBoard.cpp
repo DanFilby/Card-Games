@@ -3,7 +3,7 @@
 
 
 PokerBoard::PokerBoard(CardDeck& deck) : boardDeck(deck){
-	boardCards = vector<Card>();
+	boardCards = vector<Card*>();
 	hands = vector<PokerHand>();
 }
 
@@ -34,12 +34,13 @@ void PokerBoard::AddHand(PokerHand& _hand){
 
 void PokerBoard::Deal()
 {
-	for (int i = 0; i < 2; i++)
-	{
-		for (PokerHand hand : hands) {
-			hand.AddCard(boardDeck.DrawCard());
-		}
+	for (int i = 0; i < hands.size(); i++) {
+		vector<Card*> newHand = vector<Card*>();
+		newHand.push_back(boardDeck.DrawCard());
+		newHand.push_back(boardDeck.DrawCard());
+		copy(newHand.begin(), newHand.end(), hands[i].cards.begin());
 	}
+	
 }
 
 void PokerBoard::Flop() {

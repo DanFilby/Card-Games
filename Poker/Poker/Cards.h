@@ -40,3 +40,14 @@ static void PrintCards(vector<Card> cards, string preface) {
 	}
 	cout << "\n" << preface << result << "\n\n";
 }
+
+static void PrintCards(vector<Card*> cards, string preface) {
+	if (cards.empty()) {
+		return;
+	}
+	string result = "|  ";
+	for (Card* c : cards) {
+		result += c->Name() + "  |  ";
+	}
+	cout << "\n" << preface << result << "\n\n";
+}

@@ -23,7 +23,7 @@ int main()
 
     playerHand.PrintHand();
 
-    vector<Card> test{ deck.DrawCard(), deck.DrawCard() };
+    vector<Card*> test{ deck.DrawCard(), deck.DrawCard() };
     PokerHand hand = PokerHand(test);
 
     board.Flop();

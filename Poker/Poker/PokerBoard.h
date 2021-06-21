@@ -21,7 +21,7 @@ public:
 
 private:
 	CardDeck& boardDeck;
-	vector<Card> boardCards;
+	vector<Card*> boardCards;
 	vector<PokerHand> hands;
 };
 

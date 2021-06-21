@@ -31,8 +31,8 @@ void CardDeck::PrintCardsTopDown() {
 	}
 }
 
-Card CardDeck::DrawCard(){
-	Card c = deck.back();
+Card* CardDeck::DrawCard(){
+	Card* c = new Card(deck.back());
 	deck.pop_back();
 	return c;
 }
