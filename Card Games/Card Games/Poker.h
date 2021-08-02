@@ -17,7 +17,14 @@ private:
 };
 
 class PokerHand {
-
+public:
+	PokerHand();
+	PokerHand(std::vector<Card>);
+	void AddCard(Card);
+	void AddCard(vector<Card>);
+	void Clear();
+	void Print();
+	vector<Card> cards;
 
 };
 
