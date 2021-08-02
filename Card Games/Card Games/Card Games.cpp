@@ -1,10 +1,17 @@
 #include <iostream>
 #include "Cards.h"
+#include "Deck.h"
 
+using namespace std;
 
 int main()
 {
-    Card c(Suit::Hearts, 11);
+    Deck d;
+    d.Shuffle();
+    
+    vector<Card> c = d.Draw(54);
 
-    std::cout << c.Name();
+    for (auto f : c) {
+        cout << f.Name();
+    }
 }
