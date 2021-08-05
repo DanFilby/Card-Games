@@ -30,7 +30,7 @@ public:
 
 class PokerGame {
 public:
-	PokerGame();
+	PokerGame(int numOp);
 	void StartGame();
 
 

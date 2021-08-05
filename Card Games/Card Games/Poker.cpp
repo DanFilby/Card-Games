@@ -1,4 +1,5 @@
 #include "Poker.h"
+#include <algorithm>
 
 #pragma region pokerBoard
 PokerBoard::PokerBoard(Deck& _deck):deck{_deck}
@@ -28,19 +29,33 @@ void PokerBoard::River()
 #pragma endregion
 
 #pragma region PokerGame
-PokerGame::PokerGame() : board(deck)
+PokerGame::PokerGame(int numOp) : board(deck)
 {
 	deck = Deck();
 	deck.Shuffle();
 	
-	playerHand.AddCard(Card(Suit::Diamonds,3));
-	playerHand.AddCard(Card());
+	//clamps number of opponents in range of 1 - 10
+	int opponents = std::max(1, std::min(numOp, 10));
+	opponentsHands = vector<PokerHand>();
+
+	for (int i = 0; i < 2; i++) {
+		playerHand.AddCard(deck.Draw());
+		for (PokerHand opponentHand : opponentsHands) {
+			opponentHand.AddCard(deck.Draw());
+		}
+	}
+
+	playerHand.Print();
+	for (auto hand : opponentsHands) {
+		cout << "print";
+		hand.Print();
+	}
 
 }
 
 void PokerGame::StartGame()
 {
-	playerHand.Print();
+	//playerHand.Print();
 
 }
 #pragma endregion

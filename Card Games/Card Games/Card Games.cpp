@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-    PokerGame game;
+    PokerGame game(2);
     game.StartGame();
 
 }
