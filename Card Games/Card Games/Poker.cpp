@@ -38,10 +38,24 @@ PokerGame::PokerGame(int numOp) : board(deck)
 	
 	//clamps number of opponents in range of 1 - 10 then uses it to create the opponents poker hands in a vector
 	int opponents = std::max(1, std::min(numOp, 10));
-	opponentsHands = vector<PokerPlayer>(opponents);
+	opponentsHands = vector<PokerPlayer>();
 	
-	//TODO: create hands with vaiables
+	//creates player object with id 1, starting cash and true for isplayer bool
+	playerHand = PokerPlayer("player", 1, true, startingCash);
+	for (size_t i = 1; i <= opponents; i++)
+	{
+		//creates opponents with generated name, id from 2-..., set starting cash and false to say not player
+		//adds them to global vector
+		string name = "Opponent " + std::to_string(i);
+		PokerPlayer opponent = PokerPlayer(name, i + 1, false, startingCash);
+		opponentsHands.push_back(opponent);
+	}
 
+}
+
+void PokerGame::SetDefaultPlayerValues(int _startingCash)
+{
+	startingCash = _startingCash;
 }
 
 void PokerGame::StartGame()
@@ -56,13 +70,18 @@ void PokerGame::PrintPlayerHand()
 	playerHand.Print("Player: ");
 }
 
-void PokerGame::PrintAllHands()
+void PokerGame::PrintOpponentsHands()
 {
-	playerHand.Print("Player: ");
 	for (int i = 1; i <= opponentsHands.size(); i++) {
 		string preface = "Opponent-" + std::to_string(i) + ": ";
 		opponentsHands[i - 1].Print(preface);
 	}
+}
+
+void PokerGame::PrintAllHands()
+{
+	playerHand.Print("Player: ");
+	PrintOpponentsHands();
 }
 
 void PokerGame::Deal()
@@ -112,6 +131,7 @@ void PokerPlayer::Clear()
 
 void PokerPlayer::Print()
 {
+
 	PrintCards(cards, "Hand: ");
 }
 

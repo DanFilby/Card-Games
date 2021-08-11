@@ -39,11 +39,14 @@ private:
 class PokerGame {
 public:
 	PokerGame(int numOp);
+	void SetDefaultPlayerValues(int startingCash);
 	void StartGame();
 	void PrintPlayerHand();
+	void PrintOpponentsHands();
 	void PrintAllHands();
 
 private:
+	int startingCash = 5000;
 	void Deal();
 	Deck deck;
 	PokerBoard board;
