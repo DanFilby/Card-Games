@@ -9,5 +9,6 @@ int main()
 {
     PokerGame game(2);
     game.StartGame();
+    game.PrintAllHands();
 
 }

@@ -16,15 +16,23 @@ private:
 
 };
 
-class PokerHand {
+class PokerPlayer {
 public:
-	PokerHand();
-	PokerHand(std::vector<Card>);
+	PokerPlayer();
+	PokerPlayer(string _name, int _id, bool _player, int _startingCash);
+	PokerPlayer(string _name, int _id, bool _player, int _startingCash,std::vector<Card>);
 	void AddCard(Card);
 	void AddCard(vector<Card>);
 	void Clear();
 	void Print();
+	void Print(string Preface);
 	vector<Card> cards;
+
+private:
+	string name;
+	int id;
+	bool isPlayer;
+	int cash;
 
 };
 
@@ -32,12 +40,14 @@ class PokerGame {
 public:
 	PokerGame(int numOp);
 	void StartGame();
-
+	void PrintPlayerHand();
+	void PrintAllHands();
 
 private:
+	void Deal();
 	Deck deck;
 	PokerBoard board;
-	PokerHand playerHand;
-	vector<PokerHand> opponentsHands;
+	PokerPlayer playerHand;
+	vector<PokerPlayer> opponentsHands;
 
 };
