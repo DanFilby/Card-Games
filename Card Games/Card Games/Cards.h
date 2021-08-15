@@ -31,6 +31,17 @@ struct Card {
 
 };
 
+static void PrintCards(vector<Card> cards) {
+	if (cards.empty()) {
+		return;
+	}
+	string result = "|  ";
+	for (Card c : cards) {
+		result += c.Name() + "  |  ";
+	}
+	cout << result;
+}
+
 static void PrintCards(vector<Card> cards, string preface) {
 	if (cards.empty()) {
 		return;
