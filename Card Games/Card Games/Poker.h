@@ -1,7 +1,8 @@
 #pragma once
 #include	"Deck.h"
 #include "Cards.h"
-#include<unordered_map>
+#include <unordered_map>
+#include <memory>
 
 class PokerBoard {
 public:
@@ -38,33 +39,39 @@ public:
 class PokerPot {
 public:
 	PokerPot();
-	PokerPot(vector<PokerPlayer> opponents);
-	void Bet(int playerId, int betValue);
+	PokerPot(vector<PokerPlayer> players);
+	bool Bet(PokerPlayer& player, int betAmount);
 	void PrintBets();
-	int totalCash;
+	void Reset();
+	int totalCash = 0;
 
 private:
 	//store each players bets as <id, total bet>
 	std::unordered_map<int, int> playersBets;
 	vector<string> names;
+	int currentBet = 0;
 };
 
 class PokerGame {
 public:
 	PokerGame(int numOp);
-	void SetDefaultPlayerValues(int startingCash);
+	void Reset();
+	void SetDefaultPlayerValues(int startingCash, int startingAnte);
 	void StartGame();
+	void NewRound();
+	void Blind();
 	void PrintPlayerHand();
 	void PrintOpponentsHands();
 	void PrintAllHands();
 
 private:
 	int startingCash = 5000;
+	int dealerIndex = 0;
+	int currentAnte = 100;
 	void Deal();
 	Deck deck;
 	PokerBoard board;
 	PokerPot pot;
-	PokerPlayer playerHand;
-	vector<PokerPlayer> opponentsHands;
+	vector<PokerPlayer> players;
 
 };

@@ -6,22 +6,27 @@
 Deck::Deck()
 {
 	//calls reset which adds all cards to a new deck
-	Reset();
+	Fill();
 }
 
-void Deck::Reset() {
+void Deck::Fill() {
 	deck.clear();
 	Suit suites[] = { Suit::Hearts, Suit::Diamonds, Suit::Spades, Suit::Clubs };
 
 	//iterate over suits and add all cards of that suit to deck
 	for (Suit s : suites) {
 		//from 2 - ace, create the card and add to deck 
-		for (int i = 2; i <= 14; i++)	
+		for (int i = 2; i <= 14; i++)
 		{
 			Card c = Card(s, i);
 			deck.push_back(c);
 		}
 	}
+}
+
+void Deck::Reset() {
+	Fill();
+	Shuffle();
 }
 
 Card Deck::Draw()

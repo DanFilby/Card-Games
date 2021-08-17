@@ -5,6 +5,7 @@ class Deck
 {
 public:
 	Deck();
+	void Fill();
 	void Reset();
 	Card Draw();
 	vector<Card> Draw(int num);
