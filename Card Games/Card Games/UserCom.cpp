@@ -46,3 +46,54 @@ bool UserCom::YesNo(string preface)
     cout << "\n\n";
     return result;
 }
+
+int UserCom::PokerDecision(int minRaise, int playersMaxRaise)
+{
+    int input;
+    int result;
+    bool match = false;
+    bool reachedMin = false;
+
+    while (!match) {
+        cout << "1.Check 2.Raise 3.Fold : ";
+        cin >> input;
+
+        switch (input)
+        {
+        case(1):
+            result = 0;
+            match = true;
+            break;
+
+        case(2):
+            while (!reachedMin) {
+                cout << "Enter raise must exceed " << minRaise << ". 0 to cancel : ";
+                cin >> result;
+                if (result == 0) {
+                    reachedMin = true;
+                }
+                else if (result > playersMaxRaise) {
+                    cout << "Not enough cash\n";
+                }
+                else if (result <= minRaise) {
+                    cout << "Not high enough\n";
+                }
+                else {
+                    reachedMin = true;
+                    match = true;
+                }
+            }
+            break;
+
+        case(3):
+            result = -1;
+            match = true;
+            break;
+
+        }
+        
+    }
+
+    cout << "\n" << result << "\n";
+    return result;
+}

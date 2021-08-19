@@ -105,7 +105,7 @@ void PokerGame::NewRound()
 	PrintPlayerHand();
 	pot.PrintBets();
 
-
+	PlayRound();
 
 	//resets deck, hands, pot and increment dealer position
 	Reset();
@@ -113,12 +113,34 @@ void PokerGame::NewRound()
 	dealerIndex = (dealerIndex++) % players.size();
 }
 
+void PokerGame::PlayRound()
+{
+	//loop for number of players
+	for (int i = 0; i < players.size(); i++) {
+
+		//gets the player thats one after the dealer
+		PokerPlayer player = players[(i + dealerIndex + 1) % players.size()];
+
+		//states who's turn it is to console
+		cout << "==== " << player.name << " Playing ====\n\n";
+		cout << "To Call: " << pot.AmountToCall(player.id) << "\n\n";
+
+		if (player.isPlayer) {	//players turn
+			UserCom::PokerDecision(pot.AmountToCall(player.id),player.cash);
+		}
+		else {	//a computer turn
+
+
+		}
+	}
+}
+
 void PokerGame::Blind()
 {
+	//small blind 1 place from dealer
+	pot.Bet(players[(dealerIndex + 1) % players.size()], currentAnte / 2);
 	//big blind 2 places from dealer
 	pot.Bet(players[(dealerIndex + 2) % players.size()], currentAnte);
-	//small blind 1 place from dealer
-	pot.Bet(players[(dealerIndex + 1) % players.size()], currentAnte/2);
 }
 
 void PokerGame::PrintPlayerHand()
@@ -261,6 +283,12 @@ bool PokerPot::Bet(PokerPlayer& player, int betAmount)
 		return true;
 	}
 }
+
+int PokerPot::AmountToCall(int id)
+{
+	return currentBet - playersBets[id];
+}
+
 
 void PokerPot::PrintBets()
 {

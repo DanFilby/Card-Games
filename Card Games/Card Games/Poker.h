@@ -41,6 +41,7 @@ public:
 	PokerPot();
 	PokerPot(vector<PokerPlayer> players);
 	bool Bet(PokerPlayer& player, int betAmount);
+	int AmountToCall(int id);
 	void PrintBets();
 	void Reset();
 	int totalCash = 0;
@@ -59,6 +60,7 @@ public:
 	void SetDefaultPlayerValues(int startingCash, int startingAnte);
 	void StartGame();
 	void NewRound();
+	void PlayRound();
 	void Blind();
 	void PrintPlayerHand();
 	void PrintOpponentsHands();

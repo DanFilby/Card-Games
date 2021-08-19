@@ -12,6 +12,7 @@ public:
 	static string GetString(string preface);
 	static int GetNumber(string preface);
 	static bool YesNo(string preface);
+	static int PokerDecision(int minRaise, int playersMaxRaise);
 
 };
 
