@@ -94,6 +94,5 @@ int UserCom::PokerDecision(int minRaise, int playersMaxRaise)
         
     }
 
-    cout << "\n" << result << "\n";
     return result;
 }

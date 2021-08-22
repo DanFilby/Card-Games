@@ -1,6 +1,8 @@
 #include "Poker.h"
 #include "UserCom.h"
 #include <algorithm>
+#include <chrono>
+#include <thread>
 
 #pragma region Poker
 
@@ -94,6 +96,7 @@ void PokerGame::Deal()
 	for (int i = 0; i < 2; i++) {
 		for (PokerPlayer& opponent : players) {
 			opponent.AddCard(deck.Draw());
+			opponent.status = PlayingStatus::Behind;
 		}
 	}
 }
@@ -115,22 +118,77 @@ void PokerGame::NewRound()
 
 void PokerGame::PlayRound()
 {
-	//loop for number of players
-	for (int i = 0; i < players.size(); i++) {
-
+	bool goNextRound = false;
+	int i = 0;
+	while (!goNextRound) {
 		//gets the player thats one after the dealer
-		PokerPlayer player = players[(i + dealerIndex + 1) % players.size()];
+		PokerPlayer currentPlayer = players[(i + dealerIndex + 1) % players.size()];
 
-		//states who's turn it is to console
-		cout << "==== " << player.name << " Playing ====\n\n";
-		cout << "To Call: " << pot.AmountToCall(player.id) << "\n\n";
+		cout << "\n " << currentPlayer.name << "  status " << (int)currentPlayer.status;
+		//the player is still in the current round
+		if (currentPlayer.status != PlayingStatus::Folded) {
+			//states who's turn it is to console
+			cout << "==== " << currentPlayer.name << " Playing ====\n\n";
+			cout << "To Call: " << pot.AmountToCall(currentPlayer.id) << "\n";
 
-		if (player.isPlayer) {	//players turn
-			UserCom::PokerDecision(pot.AmountToCall(player.id),player.cash);
+			//check if its the players turn 
+			if (currentPlayer.isPlayer) {	
+				int playerDes = UserCom::PokerDecision(pot.AmountToCall(currentPlayer.id), currentPlayer.cash);
+				if (playerDes == -1) {//Fold
+					currentPlayer.status = PlayingStatus::Folded;
+					cout << currentPlayer.name << " Folds!";
+				}
+				else if (playerDes == 0) {//Call/Check
+					pot.Call(currentPlayer);
+				}
+				else if (playerDes > 0) {//Raise
+					pot.Bet(currentPlayer, playerDes);
+				}
+			}
+
+			else {	//a computer turn
+				int aiChoice = rangeDistribution(rndEng);	//generate random int from 1,3
+				if (aiChoice == 1) {//Fold
+					currentPlayer.status = PlayingStatus::Folded;
+					cout << currentPlayer.name << " Folds!\n" << "  status is: " << (int)currentPlayer.status;
+				}
+				else if (aiChoice == 2) {//Call/Check
+					pot.Call(currentPlayer);
+				}
+				else if (aiChoice == 3) {//Raise by 100
+					pot.Bet(currentPlayer, pot.currentBet + 100 - pot.PlayersTotalBets(currentPlayer.id));
+				}
+			}
+			cout << "\n";
 		}
-		else {	//a computer turn
 
+		//makes sure statuses are up to date and moves counter to next player. also c
+		UpdatePlayerStatuses(goNextRound);
+		i++;
+		this_thread::sleep_for(chrono::seconds(2));	//delay so player can read game messages
+	}
+}
 
+/// <summary>
+/// Updates the status of all active players. if the someone raised all non folded players'
+/// statuses will be set to behind 
+/// </summary>
+void PokerGame::UpdatePlayerStatuses(bool& nextRoundCheck)
+{
+	//baseline it will be true but each loop checks for players that are behind on betting
+	//which will make it false
+	nextRoundCheck = true;
+	for (PokerPlayer& _player : players) {
+		if (_player.status == PlayingStatus::Folded) {
+			cout << "checlking g ";	//TODO not working
+		}
+
+		else if (_player.status != PlayingStatus::Folded && pot.AmountToCall(_player.id) > 0) {	//players that are active and are behind the bet
+			_player.status = PlayingStatus::Behind; 
+			nextRoundCheck = false;	//as there are still players to bet or fold the round goes on
+		}	
+		else if(_player.status != PlayingStatus::Folded){	//players who have called or checked 
+			_player.status = PlayingStatus::Called;
 		}
 	}
 }
@@ -243,6 +301,8 @@ PokerPot::PokerPot()
 
 }
 
+
+
 void PokerPot::Reset()
 {
 	for (int i = 1; i < names.size(); i++) {
@@ -265,6 +325,12 @@ PokerPot::PokerPot(vector<PokerPlayer> players)
 	Reset();
 }
 
+bool PokerPot::Call(PokerPlayer& player)
+{
+	int betAmount = AmountToCall(player.id);
+	return Bet(player, betAmount);
+}
+
 /// <summary>
 /// Adds a bet to the pot for the given player. checks if it matches or raises current.
 /// then takes that bet off player total
@@ -276,6 +342,10 @@ bool PokerPot::Bet(PokerPlayer& player, int betAmount)
 
 	if (playersNewTotal < currentBet && player.cash < betAmount) { return false; }
 	else {
+		//displays a bet message, either saying to call or to raise
+		cout << "--> " << player.name << " bets " << betAmount << 
+			((currentBet < playersNewTotal) ? " To raise to " : " To call to ") << playersNewTotal << "\n";
+		
 		playersBets[player.id] = playersNewTotal;
 		currentBet = playersNewTotal;
 		player.cash -= betAmount;
@@ -289,6 +359,9 @@ int PokerPot::AmountToCall(int id)
 	return currentBet - playersBets[id];
 }
 
+int PokerPot::PlayersTotalBets(int id) {
+	return playersBets[id];
+}
 
 void PokerPot::PrintBets()
 {
