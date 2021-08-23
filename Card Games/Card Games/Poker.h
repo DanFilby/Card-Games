@@ -52,6 +52,7 @@ public:
 	int AmountToCall(int id);
 	int PlayersTotalBets(int id);
 	void PrintBets();
+	void NewRound();
 	void Reset();
 
 	int totalCash = 0;
@@ -61,6 +62,7 @@ private:
 	//store each players bets as <id, total bet>
 	std::unordered_map<int, int> playersBets;
 	vector<string> names;
+	int lastRoundBet = 0;	//value of last rounds bet so can show players start at 0 the next round
 };
 
 class PokerGame {

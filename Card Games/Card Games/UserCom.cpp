@@ -55,7 +55,7 @@ int UserCom::PokerDecision(int minRaise, int playersMaxRaise)
     bool reachedMin = false;
 
     while (!match) {
-        cout << "1.Check 2.Raise 3.Fold : ";
+        cout << "1.Call 2.Raise 3.Fold : ";
         cin >> input;
 
         switch (input)

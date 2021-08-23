@@ -80,8 +80,15 @@ void PokerGame::StartGame()
 	bool continueGame = false;
 	do{
 		if (UserCom::YesNo("Start Round?")) {
+			Blind();
+			Deal();
 			continueGame = true;	
-			NewRound();
+			for (int i = 0; i < 4; i++) {	//4 rounds. intital betting, flop, turn and river
+				NewRound();
+				//next round on board
+			}
+			dealerIndex = (dealerIndex++) % players.size();
+			pot.Reset();
 		}
 		else {
 			continueGame = false;
@@ -103,28 +110,23 @@ void PokerGame::Deal()
 
 void PokerGame::NewRound()
 {
-	Blind();
-	Deal();
 	PrintPlayerHand();
 	pot.PrintBets();
 
 	PlayRound();
-
-	//resets deck, hands, pot and increment dealer position
-	Reset();
-	pot.Reset();
-	dealerIndex = (dealerIndex++) % players.size();
 }
 
 void PokerGame::PlayRound()
 {
+	//count of acive players
+	int activePlayers = count_if(players.begin(), players.end(), [](PokerPlayer p) {return p.status != PlayingStatus::Folded; });
+
 	bool goNextRound = false;
 	int i = 0;
 	while (!goNextRound) {
 		//gets the player thats one after the dealer
-		PokerPlayer currentPlayer = players[(i + dealerIndex + 1) % players.size()];
+		PokerPlayer& currentPlayer = players[(i + dealerIndex + 1) % players.size()];
 
-		cout << "\n " << currentPlayer.name << "  status " << (int)currentPlayer.status;
 		//the player is still in the current round
 		if (currentPlayer.status != PlayingStatus::Folded) {
 			//states who's turn it is to console
@@ -145,12 +147,11 @@ void PokerGame::PlayRound()
 					pot.Bet(currentPlayer, playerDes);
 				}
 			}
-
 			else {	//a computer turn
 				int aiChoice = rangeDistribution(rndEng);	//generate random int from 1,3
 				if (aiChoice == 1) {//Fold
 					currentPlayer.status = PlayingStatus::Folded;
-					cout << currentPlayer.name << " Folds!\n" << "  status is: " << (int)currentPlayer.status;
+					cout << currentPlayer.name << " Folds!\n" ;
 				}
 				else if (aiChoice == 2) {//Call/Check
 					pot.Call(currentPlayer);
@@ -159,11 +160,12 @@ void PokerGame::PlayRound()
 					pot.Bet(currentPlayer, pot.currentBet + 100 - pot.PlayersTotalBets(currentPlayer.id));
 				}
 			}
-			cout << "\n";
+			cout << "\n\n";
 		}
 
-		//makes sure statuses are up to date and moves counter to next player. also c
-		UpdatePlayerStatuses(goNextRound);
+		//if its looped over all active players it will
+		//make sure statuses are up to date and moves counter to next player
+		if(i >= players.size() - 1)UpdatePlayerStatuses(goNextRound);
 		i++;
 		this_thread::sleep_for(chrono::seconds(2));	//delay so player can read game messages
 	}
@@ -180,14 +182,13 @@ void PokerGame::UpdatePlayerStatuses(bool& nextRoundCheck)
 	nextRoundCheck = true;
 	for (PokerPlayer& _player : players) {
 		if (_player.status == PlayingStatus::Folded) {
-			cout << "checlking g ";	//TODO not working
+			continue;
 		}
-
-		else if (_player.status != PlayingStatus::Folded && pot.AmountToCall(_player.id) > 0) {	//players that are active and are behind the bet
+		if (pot.AmountToCall(_player.id) > 0) {		//players that are active and are behind the bet
 			_player.status = PlayingStatus::Behind; 
 			nextRoundCheck = false;	//as there are still players to bet or fold the round goes on
 		}	
-		else if(_player.status != PlayingStatus::Folded){	//players who have called or checked 
+		else{										//players who have called or checked 
 			_player.status = PlayingStatus::Called;
 		}
 	}
@@ -195,10 +196,12 @@ void PokerGame::UpdatePlayerStatuses(bool& nextRoundCheck)
 
 void PokerGame::Blind()
 {
+	cout << "Blinds:\n";
 	//small blind 1 place from dealer
 	pot.Bet(players[(dealerIndex + 1) % players.size()], currentAnte / 2);
 	//big blind 2 places from dealer
 	pot.Bet(players[(dealerIndex + 2) % players.size()], currentAnte);
+	cout << "\n";
 }
 
 void PokerGame::PrintPlayerHand()
@@ -301,7 +304,10 @@ PokerPot::PokerPot()
 
 }
 
-
+void PokerPot::NewRound() {
+	lastRoundBet += currentBet; 
+	currentBet = 0;
+}
 
 void PokerPot::Reset()
 {
@@ -365,7 +371,7 @@ int PokerPot::PlayersTotalBets(int id) {
 
 void PokerPot::PrintBets()
 {
-	cout << "Bets: \n";
+	cout << "Total Pot: " << totalCash << "  Current Bets: \n";
 	for (auto player : playersBets) {
 		cout << "id: " << player.first << " - " << names[player.first ] << " | " << player.second << "\n";
 	}
