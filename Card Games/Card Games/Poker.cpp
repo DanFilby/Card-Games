@@ -16,6 +16,22 @@ void PokerBoard::PrintBoard()
 	PrintCards(boardCards, "Board : ");
 }
 
+void PokerBoard::NextRound()
+{
+	if (round == 1) {
+		Flop();
+	}
+	else if (round == 2) {
+		Turn();
+	}
+	else if (round == 3) {
+		River();
+	}
+
+	PrintBoard();
+	round++;
+}
+
 void PokerBoard::Flop()
 {
 	vector<Card> cards = deck.Draw(3);//gets top 3 cards 
@@ -84,9 +100,11 @@ void PokerGame::StartGame()
 			Deal();
 			continueGame = true;	
 			for (int i = 0; i < 4; i++) {	//4 rounds. intital betting, flop, turn and river
+				board.NextRound();
+				pot.NewRound();
 				NewRound();
-				//next round on board
 			}
+			//work out winner
 			dealerIndex = (dealerIndex++) % players.size();
 			pot.Reset();
 		}
@@ -306,7 +324,6 @@ PokerPot::PokerPot()
 
 void PokerPot::NewRound() {
 	lastRoundBet += currentBet; 
-	currentBet = 0;
 }
 
 void PokerPot::Reset()
@@ -350,7 +367,7 @@ bool PokerPot::Bet(PokerPlayer& player, int betAmount)
 	else {
 		//displays a bet message, either saying to call or to raise
 		cout << "--> " << player.name << " bets " << betAmount << 
-			((currentBet < playersNewTotal) ? " To raise to " : " To call to ") << playersNewTotal << "\n";
+			((currentBet < playersNewTotal) ? " To raise to " : " To call to ") << (playersNewTotal - lastRoundBet) << "\n";
 		
 		playersBets[player.id] = playersNewTotal;
 		currentBet = playersNewTotal;

@@ -14,6 +14,7 @@ class PokerBoard {
 public:
 	PokerBoard(Deck&);
 	void PrintBoard();
+	void NextRound();
 	void Flop();	//first three cards
 	void Turn();	//fourth card
 	void River();	//fifth card
@@ -21,7 +22,7 @@ public:
 private:
 	Deck& deck;
 	vector<Card> boardCards;
-
+	int round = 0;	//keeps track of current round
 };
 
 class PokerPlayer {
