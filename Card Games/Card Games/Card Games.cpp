@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Cards.h"
 #include "Deck.h"
-#include "Poker.h"
+#include "PokerGame.h"
 #include "UserCom.h"
 
 using namespace std;

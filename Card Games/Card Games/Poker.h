@@ -1,5 +1,5 @@
 #pragma once
-#include	"Deck.h"
+#include "Deck.h"
 #include "Cards.h"
 #include <unordered_map>
 #include <memory>
@@ -18,6 +18,7 @@ public:
 	void Flop();	//first three cards
 	void Turn();	//fourth card
 	void River();	//fifth card
+	vector<Card> BoardCards();
 
 private:
 	Deck& deck;
@@ -64,31 +65,4 @@ private:
 	std::unordered_map<int, int> playersBets;
 	vector<string> names;
 	int lastRoundBet = 0;	//value of last rounds bet so can show players start at 0 the next round
-};
-
-class PokerGame {
-public:
-	PokerGame(int numOp);
-	void Reset();
-	void SetDefaultPlayerValues(int startingCash, int startingAnte);
-	void StartGame();
-	void NewRound();
-	void PlayRound();
-	void UpdatePlayerStatuses(bool & nextRoundCheck);
-	void Blind();
-	void PrintPlayerHand();
-	void PrintOpponentsHands();
-	void PrintAllHands();
-
-private:
-	int startingCash = 5000;
-	int dealerIndex = 0;
-	int currentAnte = 100;
-	void Deal();
-	Deck deck;
-	PokerBoard board;
-	PokerPot pot;
-	vector<PokerPlayer> players;
-	std::default_random_engine rndEng;
-	std::uniform_int_distribution<> rangeDistribution {1,3};
 };
