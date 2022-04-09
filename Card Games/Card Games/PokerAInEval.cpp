@@ -58,12 +58,69 @@ vector<int> HandsEvaluator::Optimized()
 
 vector<int> HandsEvaluator::FlushCheck()
 {
-	return vector<int>();
+	vector<int> flushPlayers = vector<int>();
+
+	for (auto p : players) {
+		//stores a count of each suit
+		int suitsCount[4] = {0,0,0,0};
+
+		//add the boards card's suits
+		for (auto c : boardCards) {
+			suitsCount[(int)c.suit] += 1;
+		}
+
+		//add players cards suits
+		suitsCount[(int)p.cards[0].suit] += 1;
+		suitsCount[(int)p.cards[0].suit] += 1;
+
+		//check for a flush in each suit
+		for (int suitCount : suitsCount) {
+			if (suitCount > 5) {
+				flushPlayers.push_back(p.id);
+			}
+		}
+
+	}
+	return flushPlayers;
 }
 
 vector<int> HandsEvaluator::StraightCheck()
 {
-	return vector<int>();
+	//players with straight
+	vector<int> straightPlayers = vector<int>();
+	
+	for (auto p : players) {
+		//copy of the board cards ordered
+		vector<Card> combinedBoard = vector<Card>(boardCards);
+		combinedBoard.push_back(p.cards[0]);
+		combinedBoard.push_back(p.cards[1]);
+		std::sort(combinedBoard.begin(), combinedBoard.end(), [](Card a, Card b) { return a.value < b.value; });
+
+		for (size_t i = 0; i < 2; i++)
+		{
+			int consecutiveCount = 0;
+			int prevValue = combinedBoard[i].value;
+
+			int j = i + 1;
+			for (j; j < 4 + i; j++)
+			{
+				if (combinedBoard[j].value == ++prevValue) {
+					consecutiveCount++;
+				}
+				else {
+					break;
+				}			
+			}
+			if (consecutiveCount > 5) {
+				straightPlayers.push_back(p.id);
+			}
+			//TODO: could add same player twice
+			//TODO: extract the combined board function
+		}
+		
+	}
+	
+	return straightPlayers;
 }
 
 vector<int> HandsEvaluator::HighestOfKind(int& _numOfKind)

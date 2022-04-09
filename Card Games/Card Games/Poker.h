@@ -13,6 +13,7 @@ enum class PlayingStatus { Folded, Called, Behind };
 class PokerBoard {
 public:
 	PokerBoard(Deck&);
+	PokerBoard(Deck& _deck, vector<Card> startCards);
 	void PrintBoard();
 	void NextRound();
 	void Flop();	//first three cards

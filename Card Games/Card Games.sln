@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Card Games", "Card Games\Card Games.vcxproj", "{9C166D40-A1A0-4082-888F-2E14D4C50A4E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HandEvalUnitTest", "HandEvalUnitTest\HandEvalUnitTest.vcxproj", "{E7568504-4AB1-4D87-A19D-F411AE36496E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{9C166D40-A1A0-4082-888F-2E14D4C50A4E}.Release|x64.Build.0 = Release|x64
 		{9C166D40-A1A0-4082-888F-2E14D4C50A4E}.Release|x86.ActiveCfg = Release|Win32
 		{9C166D40-A1A0-4082-888F-2E14D4C50A4E}.Release|x86.Build.0 = Release|Win32
+		{E7568504-4AB1-4D87-A19D-F411AE36496E}.Debug|x64.ActiveCfg = Debug|x64
+		{E7568504-4AB1-4D87-A19D-F411AE36496E}.Debug|x64.Build.0 = Debug|x64
+		{E7568504-4AB1-4D87-A19D-F411AE36496E}.Debug|x86.ActiveCfg = Debug|Win32
+		{E7568504-4AB1-4D87-A19D-F411AE36496E}.Debug|x86.Build.0 = Debug|Win32
+		{E7568504-4AB1-4D87-A19D-F411AE36496E}.Release|x64.ActiveCfg = Release|x64
+		{E7568504-4AB1-4D87-A19D-F411AE36496E}.Release|x64.Build.0 = Release|x64
+		{E7568504-4AB1-4D87-A19D-F411AE36496E}.Release|x86.ActiveCfg = Release|Win32
+		{E7568504-4AB1-4D87-A19D-F411AE36496E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

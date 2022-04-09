@@ -27,7 +27,7 @@ PokerGame::PokerGame(int numOp) : board(deck)
 	//testing
 
 	HandsEvaluator eval = HandsEvaluator(HandsEvaluator::EvalMethods::Optimized);
-	eval.Evaluate(board.BoardCards(), players);
+	//eval.Evaluate(board.BoardCards(), players);
 
 }
 

@@ -9,6 +9,13 @@ PokerBoard::PokerBoard(Deck& _deck):deck{_deck}
 {
 }
 
+PokerBoard::PokerBoard(Deck& _deck, vector<Card> startCards) : deck{_deck }
+{
+	if (startCards.size() == 5) {
+		boardCards = startCards;
+	}
+}
+
 void PokerBoard::PrintBoard()
 {
 	PrintCards(boardCards, "Board : ");

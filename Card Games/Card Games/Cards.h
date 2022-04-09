@@ -17,7 +17,7 @@ struct Card {
 
 	Card() {
 		suit = Suit::Hearts;
-		value = 2;
+		value = 0;
 	}
 
 	Card(Suit _suit, int num) {
@@ -28,6 +28,7 @@ struct Card {
 	string Name() {
 		return CardValueMap[value] + " Of " + SuitMap[(int)suit];
 	}
+
 
 };
 
