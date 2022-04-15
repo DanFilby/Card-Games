@@ -24,10 +24,7 @@ PokerGame::PokerGame(int numOp) : board(deck)
 
 	pot = PokerPot(players);
 
-	//testing
-
-	HandsEvaluator eval = HandsEvaluator(HandsEvaluator::EvalMethods::Optimized);
-	//eval.Evaluate(board.BoardCards(), players);
+	
 
 }
 
@@ -60,6 +57,11 @@ void PokerGame::StartGame()
 				NewRound();
 			}
 			//work out winner
+			//testing
+
+			HandsEvaluator eval = HandsEvaluator(HandsEvaluator::EvalMethods::Optimized);
+			eval.Evaluate(board.BoardCards(), players);
+
 			dealerIndex = (dealerIndex++) % players.size();
 			pot.Reset();
 		}

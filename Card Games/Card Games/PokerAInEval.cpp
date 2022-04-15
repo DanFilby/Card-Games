@@ -38,21 +38,41 @@ vector<int> HandsEvaluator::Optimized()
 		}
 	}
 	else {
+		//add straights to winners
 		currentWinnerIds = StraightCheck();
 	}
 
 	int numOfKind = 0;
 	idBuffer = HighestOfKind(numOfKind);
 
+	//check for full house
+	vector<int> fullHouse = FullHouse();
+
 	if (numOfKind == 4) {
+		//4 of kind beats straight and flush
 		return idBuffer;
 	}
-	if (numOfKind == 3) {
-		if (!currentWinnerIds.empty()) {
-			return currentWinnerIds;
-		}
-		else { return idBuffer; }
+	//a full house
+	if (!fullHouse.empty()) {
+		return fullHouse;
 	}
+	//if no full house and there is a straight or flush
+	if (!currentWinnerIds.empty()) {
+		return currentWinnerIds;
+	}
+
+	if (numOfKind == 3) {
+		//update winner to 3 of kind
+		currentWinnerIds = idBuffer;
+		return currentWinnerIds;
+	}
+
+	if (numOfKind == 2) {
+		//check 2 pair
+		//return winners
+	}
+
+	//return highest card hands
 
 }
 
@@ -75,7 +95,7 @@ vector<int> HandsEvaluator::FlushCheck()
 
 		//check for a flush in each suit
 		for (int suitCount : suitsCount) {
-			if (suitCount > 5) {
+			if (suitCount >= 5) {
 				flushPlayers.push_back(p.id);
 			}
 		}
@@ -96,13 +116,13 @@ vector<int> HandsEvaluator::StraightCheck()
 		combinedBoard.push_back(p.cards[1]);
 		std::sort(combinedBoard.begin(), combinedBoard.end(), [](Card a, Card b) { return a.value < b.value; });
 
-		for (size_t i = 0; i < 2; i++)
+		for (size_t i = 0; i < 3; i++)
 		{
-			int consecutiveCount = 0;
+			int consecutiveCount = 1;
 			int prevValue = combinedBoard[i].value;
 
 			int j = i + 1;
-			for (j; j < 4 + i; j++)
+			for (j; j <= 4 + i; j++)
 			{
 				if (combinedBoard[j].value == ++prevValue) {
 					consecutiveCount++;
@@ -111,7 +131,7 @@ vector<int> HandsEvaluator::StraightCheck()
 					break;
 				}			
 			}
-			if (consecutiveCount > 5) {
+			if (consecutiveCount >= 5) {
 				straightPlayers.push_back(p.id);
 			}
 			//TODO: could add same player twice
@@ -125,7 +145,39 @@ vector<int> HandsEvaluator::StraightCheck()
 
 vector<int> HandsEvaluator::HighestOfKind(int& _numOfKind)
 {
-	return vector<int>();
+	vector<int> highestPlayers = vector<int>();
+	int highestOfKind = 0;
+
+	for (auto p : players) {
+		//copy of the board cards ordered
+		vector<Card> combinedBoard = vector<Card>(boardCards);
+		combinedBoard.push_back(p.cards[0]);
+		combinedBoard.push_back(p.cards[1]);
+
+		int ofAKindCount[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
+		
+		for (Card c : combinedBoard) {
+			ofAKindCount[c.value] += 1;
+		}
+
+		int tempHighest = 0;
+		for (int count : ofAKindCount) {
+			if (count > tempHighest) {
+				tempHighest = count;
+			}
+		}
+
+		if (tempHighest > highestOfKind) {
+			highestPlayers = vector<int>({ p.id });
+			highestOfKind = tempHighest;
+		}
+		else if (tempHighest == highestOfKind) {
+			highestPlayers.push_back(p.id);
+		}
+	}
+
+	_numOfKind = highestOfKind;
+	return highestPlayers;
 }
 
 vector<int> HandsEvaluator::FullHouse()

@@ -3,7 +3,6 @@
 #include "../Card Games/Cards.h"
 #include "../Card Games/Poker.h"
 #include "../Card Games/PokerAInEval.h"
-#include "../Card Games/Deck.h"
 #include<vector>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -16,7 +15,6 @@ namespace HandEvalUnitTest
 		
 		TEST_METHOD(flushCheck)
 		{
-			//Deck cardDeck = Deck();
 			vector<PokerPlayer> players = vector<PokerPlayer>();
 
 			std::vector<Card> p1Hand = { Card((Suit)1,2),Card((Suit)1,2) };
