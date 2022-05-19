@@ -182,7 +182,37 @@ vector<int> HandsEvaluator::HighestOfKind(int& _numOfKind)
 
 vector<int> HandsEvaluator::FullHouse()
 {
-	return vector<int>();
+	vector<int> fullHousePlayers = vector<int>();
+
+	for (auto p : players) {
+		//copy of the board cards ordered
+		vector<Card> combinedBoard = vector<Card>(boardCards);
+		combinedBoard.push_back(p.cards[0]);
+		combinedBoard.push_back(p.cards[1]);
+
+		int ofAKindCount[13] = { 0,0,0,0,0,0,0,0,0,0,0,0,0 };
+
+		for (Card c : combinedBoard) {
+			ofAKindCount[c.value] += 1;
+		}
+
+		bool threeKind = false, TwoKind = false;
+		//TODO: wont work if 3 of each 
+		for (Card c : combinedBoard)
+		{
+			if(c.value == 2){
+				TwoKind = true;
+			}
+			if(c.value == 3) {
+				threeKind = true;
+			}
+		}
+
+		if (threeKind && TwoKind) {
+			fullHousePlayers.push_back(p.id);
+		}
+	}
+	return fullHousePlayers;
 }
 
 vector<int> HandsEvaluator::Intersection(vector<int> v1, vector<int> v2)
